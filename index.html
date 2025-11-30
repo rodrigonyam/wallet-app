@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet App</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Wallet App</h1>
+        <button id="capture-btn">Capture Credit Card</button>
+        <div id="card-display" class="card-display"></div>
+    </div>
+    <script src="js/camera.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/app.js"></script>
+</body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Wallet App</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💳 Digital Wallet</h1>
+        </header>
+
+        <nav class="menu">
+            <button id="add-card-btn" class="menu-btn">➕ Add Card</button>
+            <button id="show-all-btn" class="menu-btn">👁️ Show All</button>
+            <button id="hide-all-btn" class="menu-btn">🙈 Hide All</button>
+        </nav>
+
+        <div id="camera-container" class="camera-container hidden">
+            <video id="video" autoplay></video>
+            <canvas id="canvas" class="hidden"></canvas>
+            <div class="camera-controls">
+                <button id="capture-btn" class="btn-primary">📷 Capture</button>
+                <button id="cancel-btn" class="btn-secondary">❌ Cancel</button>
+            </div>
+        </div>
+
+        <div id="card-name-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Name Your Card</h3>
+                <input type="text" id="card-name-input" placeholder="e.g., Chase Visa, AmEx Gold">
+                <div class="modal-buttons">
+                    <button id="save-card-btn" class="btn-primary">Save</button>
+                    <button id="cancel-name-btn" class="btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <main>
+            <div id="card-list" class="card-list"></div>
+            <div id="empty-state" class="empty-state">
+                <p>📭 No cards saved yet</p>
+                <p>Click "Add Card" to get started</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/camera.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
+</html>
