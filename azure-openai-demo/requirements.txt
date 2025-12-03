@@ -1,0 +1,23 @@
+# Azure OpenAI and AI dependencies
+openai==1.54.3
+azure-identity==1.19.0
+azure-keyvault-secrets==4.8.0
+python-dotenv==1.0.0
+
+# Web framework
+flask==3.0.0
+flask-cors==4.0.0
+
+# Document processing for RAG
+pypdf2==3.0.1
+langchain==0.3.7
+langchain-openai==0.2.5
+faiss-cpu==1.13.0
+
+# Data processing
+pandas==2.1.4
+numpy==1.26.2
+
+# Monitoring and logging
+azure-monitor-opentelemetry==1.6.0
+opencensus-ext-azure==1.1.13
