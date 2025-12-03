@@ -1,3 +1,4 @@
+/* Mobile-first responsive design */
 * {
     margin: 0;
     padding: 0;
@@ -8,63 +9,79 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
-    padding: 20px;
+    padding: 10px;
+    /* Prevent scrolling issues on mobile */
+    overflow-x: hidden;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 100%;
     margin: 0 auto;
     background: white;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     overflow: hidden;
+    min-height: calc(100vh - 20px);
 }
 
 header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 30px;
+    padding: 20px 15px;
     text-align: center;
+    /* Safe area for notched devices */
+    padding-top: max(20px, env(safe-area-inset-top));
 }
 
 h1 {
-    font-size: 2em;
+    font-size: 1.5em;
     font-weight: 600;
 }
 
+/* Mobile-optimized menu */
 .menu {
-    display: flex;
-    gap: 10px;
-    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 15px;
     background: #f8f9fa;
-    border-bottom: 2px solid #e9ecef;
-    flex-wrap: wrap;
+    border-bottom: 1px solid #e9ecef;
 }
 
 .menu-btn {
-    flex: 1;
-    min-width: 120px;
-    padding: 12px 20px;
+    width: 100%;
+    padding: 16px 20px;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     background: white;
     color: #333;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* Better touch target */
+    min-height: 48px;
 }
 
-.menu-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    background: #667eea;
+/* Touch-friendly hover effects */
+@media (hover: hover) {
+    .menu-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        background: #667eea;
+        color: white;
+    }
+}
+
+.menu-btn:active {
+    transform: scale(0.98);
+    background: #5568d3;
     color: white;
 }
 
 .camera-container {
-    padding: 20px;
+    padding: 15px;
     background: #000;
     text-align: center;
 }
@@ -75,8 +92,9 @@ h1 {
 
 #video {
     width: 100%;
-    max-width: 640px;
-    border-radius: 10px;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
 }
 
 #canvas {
@@ -84,20 +102,21 @@ h1 {
 }
 
 .camera-controls {
-    margin-top: 20px;
-    display: flex;
-    gap: 10px;
-    justify-content: center;
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
 }
 
 .btn-primary, .btn-secondary {
-    padding: 12px 30px;
+    padding: 16px 20px;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    min-height: 48px;
 }
 
 .btn-primary {
@@ -105,9 +124,9 @@ h1 {
     color: white;
 }
 
-.btn-primary:hover {
+.btn-primary:active {
     background: #5568d3;
-    transform: translateY(-2px);
+    transform: scale(0.98);
 }
 
 .btn-secondary {
@@ -115,8 +134,9 @@ h1 {
     color: white;
 }
 
-.btn-secondary:hover {
+.btn-secondary:active {
     background: #5a6268;
+    transform: scale(0.98);
 }
 
 .modal {
@@ -130,6 +150,7 @@ h1 {
     align-items: center;
     justify-content: center;
     z-index: 1000;
+    padding: 20px;
 }
 
 .modal.hidden {
@@ -138,67 +159,65 @@ h1 {
 
 .modal-content {
     background: white;
-    padding: 30px;
+    padding: 25px 20px;
     border-radius: 15px;
+    width: 100%;
     max-width: 400px;
-    width: 90%;
 }
 
 .modal-content h3 {
     margin-bottom: 20px;
     color: #333;
+    font-size: 1.2em;
 }
 
 .modal-content input {
     width: 100%;
-    padding: 12px;
+    padding: 16px;
     border: 2px solid #e9ecef;
     border-radius: 8px;
     font-size: 16px;
     margin-bottom: 20px;
+    /* Prevent zoom on iOS */
+    font-size: 16px;
 }
 
 .modal-buttons {
-    display: flex;
-    gap: 10px;
-}
-
-.modal-buttons button {
-    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
 }
 
 main {
-    padding: 20px;
-    min-height: 300px;
+    padding: 15px;
+    min-height: 200px;
+    /* Safe area for devices with home indicators */
+    padding-bottom: max(15px, env(safe-area-inset-bottom));
 }
 
+/* Mobile-first card layout */
 .card-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: 1fr;
+    gap: 15px;
 }
 
 .card-item {
     background: white;
-    border-radius: 15px;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-
-.card-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
 }
 
 .card-item.hidden-card {
-    filter: blur(10px);
+    filter: blur(8px);
     opacity: 0.6;
 }
 
 .card-image {
     width: 100%;
-    height: 200px;
+    height: 180px;
     object-fit: cover;
     background: #f8f9fa;
 }
@@ -208,26 +227,28 @@ main {
 }
 
 .card-name {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     color: #333;
+    word-wrap: break-word;
 }
 
 .card-actions {
-    display: flex;
-    gap: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
 }
 
 .card-actions button {
-    flex: 1;
-    padding: 8px;
+    padding: 12px;
     border: none;
-    border-radius: 6px;
-    font-size: 12px;
+    border-radius: 8px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    min-height: 44px;
 }
 
 .toggle-btn {
@@ -235,8 +256,9 @@ main {
     color: #333;
 }
 
-.toggle-btn:hover {
+.toggle-btn:active {
     background: #ffb300;
+    transform: scale(0.98);
 }
 
 .delete-btn {
@@ -244,90 +266,159 @@ main {
     color: white;
 }
 
-.delete-btn:hover {
+.delete-btn:active {
     background: #c82333;
+    transform: scale(0.98);
 }
 
 .empty-state {
     text-align: center;
-    padding: 60px 20px;
+    padding: 40px 20px;
     color: #6c757d;
 }
 
 .empty-state p:first-child {
-    font-size: 48px;
+    font-size: 36px;
     margin-bottom: 10px;
 }
 
 .empty-state p:last-child {
-    font-size: 18px;
+    font-size: 16px;
+    line-height: 1.5;
 }
 
 .hidden {
     display: none;
-}body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 20px;
 }
 
-.container {
-    max-width: 600px;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+/* Prevent text selection and improve touch interaction */
+.menu-btn, .btn-primary, .btn-secondary, .card-actions button {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
-h1 {
-    text-align: center;
-    color: #333;
+/* Improve scrolling on mobile */
+body {
+    -webkit-overflow-scrolling: touch;
 }
 
-.card {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
-    margin: 10px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* Better focus states for accessibility */
+.menu-btn:focus, .btn-primary:focus, .btn-secondary:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
 }
 
-.card img {
-    width: 100px;
-    height: auto;
-    border-radius: 5px;
+.modal-content input:focus {
+    outline: 2px solid #667eea;
+    border-color: #667eea;
 }
 
-.card button {
-    background-color: #ff4c4c;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
+/* Loading state for buttons */
+.btn-loading {
+    opacity: 0.7;
+    pointer-events: none;
 }
 
-.card button:hover {
-    background-color: #ff1a1a;
+.btn-loading:after {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 8px;
 }
 
-.capture-button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    text-align: center;
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-.capture-button:hover {
-    background-color: #218838;
+/* Tablet and larger screens */
+@media (min-width: 768px) {
+    body {
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 800px;
+        border-radius: 20px;
+    }
+
+    header {
+        padding: 30px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    .menu {
+        grid-template-columns: repeat(3, 1fr);
+        padding: 20px;
+    }
+
+    main {
+        padding: 20px;
+    }
+
+    .card-list {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .card-image {
+        height: 200px;
+    }
+
+    .card-actions {
+        gap: 8px;
+    }
+
+    .card-actions button {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .empty-state {
+        padding: 60px 20px;
+    }
+
+    .empty-state p:first-child {
+        font-size: 48px;
+    }
+
+    .empty-state p:last-child {
+        font-size: 18px;
+    }
+
+    /* Re-enable hover effects for larger screens */
+    .card-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary:hover {
+        background: #5568d3;
+        transform: translateY(-1px);
+    }
+
+    .btn-secondary:hover {
+        background: #5a6268;
+    }
+
+    .toggle-btn:hover {
+        background: #ffb300;
+    }
+
+    .delete-btn:hover {
+        background: #c82333;
+    }
 }

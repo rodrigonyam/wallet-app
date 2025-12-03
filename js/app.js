@@ -1,30 +1,4 @@
-// Main JavaScript file for the wallet application
-
-document.addEventListener('DOMContentLoaded', () => {
-    const captureButton = document.getElementById('capture-button');
-    const cardList = document.getElementById('card-list');
-
-    captureButton.addEventListener('click', () => {
-        // Function to capture image of credit card
-        captureImage();
-    });
-
-    function captureImage() {
-        // Logic to access camera and capture image
-        // This will call a function from camera.js
-        // Placeholder for camera functionality
-        console.log('Capture image function called');
-    }
-
-    function displaySavedCards() {
-        // Logic to retrieve and display saved cards
-        // This will call a function from storage.js
-        console.log('Display saved cards function called');
-    }
-
-    // Initial call to display saved cards on load
-    displaySavedCards();
-});
+// Mobile-optimized wallet application
 // Main JavaScript file for the wallet application
 
 document.addEventListener('DOMContentLoaded', () => {
