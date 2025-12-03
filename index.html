@@ -19,11 +19,27 @@
             <h1>💳 Digital Wallet</h1>
         </header>
 
+        <nav class="top-controls">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="🔍 Search cards..." class="search-input">
+                <button id="clear-search-btn" class="clear-btn hidden">✖</button>
+            </div>
+            <div class="theme-controls">
+                <button id="theme-toggle" class="theme-btn" title="Toggle Dark Mode">🌓</button>
+            </div>
+        </nav>
+
         <nav class="menu">
             <button id="add-card-btn" class="menu-btn">➕ Add Card</button>
             <button id="show-all-btn" class="menu-btn">👁️ Show All</button>
             <button id="hide-all-btn" class="menu-btn">🙈 Hide All</button>
+            <div class="menu-secondary">
+                <button id="export-btn" class="menu-btn secondary">📤 Export</button>
+                <button id="import-btn" class="menu-btn secondary">📥 Import</button>
+            </div>
         </nav>
+
+        <input type="file" id="import-input" accept=".json" class="hidden">
 
         <div id="camera-container" class="camera-container hidden">
             <video id="video" autoplay muted playsinline></video>
@@ -45,13 +61,55 @@
             </div>
         </div>
 
+        <div id="stats-container" class="stats-container">
+            <div class="stat-item">
+                <span class="stat-label">Total Cards:</span>
+                <span id="total-cards" class="stat-value">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Visible:</span>
+                <span id="visible-cards" class="stat-value">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Storage:</span>
+                <span id="storage-used" class="stat-value">0%</span>
+            </div>
+        </div>
+
         <main>
             <div id="card-list" class="card-list"></div>
             <div id="empty-state" class="empty-state">
-                <p>📭 No cards saved yet</p>
-                <p>Tap "Add Card" to get started</p>
+                <div class="empty-icon">📭</div>
+                <p class="empty-title">No cards saved yet</p>
+                <p class="empty-subtitle">Tap "Add Card" to get started</p>
+                <div class="quick-tips">
+                    <h4>💡 Quick Tips:</h4>
+                    <ul>
+                        <li>Take photos in good lighting</li>
+                        <li>Keep cards flat and centered</li>
+                        <li>Use descriptive names</li>
+                    </ul>
+                </div>
             </div>
         </main>
+
+        <!-- Enhanced Modals -->
+        <div id="export-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Export Cards</h3>
+                <p>Export your cards as a backup file</p>
+                <div class="export-options">
+                    <label><input type="checkbox" id="include-images" checked> Include card images</label>
+                    <label><input type="checkbox" id="include-metadata" checked> Include metadata</label>
+                </div>
+                <div class="modal-buttons">
+                    <button id="confirm-export-btn" class="btn-primary">📤 Export</button>
+                    <button id="cancel-export-btn" class="btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="notification" class="notification hidden"></div>
     </div>
 
     <script src="js/storage.js"></script>

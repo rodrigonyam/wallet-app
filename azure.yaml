@@ -1,0 +1,59 @@
+# Azure Developer CLI configuration for Digital Wallet App
+name: digital-wallet-app
+metadata:
+  template: digital-wallet-app@0.0.1-beta
+  
+# Azure resources configuration
+infra:
+  provider: bicep
+  path: infra
+
+# Application services
+services:
+  web:
+    project: .
+    dist: .
+    host: staticwebapp
+    language: JavaScript
+    
+# Hooks for build and deployment
+hooks:
+  prepackage:
+    shell: pwsh
+    run: |
+      Write-Host "Preparing Digital Wallet App for deployment..."
+      # Ensure all files are present
+      if (!(Test-Path "index.html")) {
+        Write-Error "index.html not found!"
+        exit 1
+      }
+      if (!(Test-Path "manifest.json")) {
+        Write-Error "manifest.json not found!"
+        exit 1
+      }
+      Write-Host "✅ All required files present"
+      
+  postdeploy:
+    shell: pwsh
+    run: |
+      Write-Host "🚀 Digital Wallet App deployed successfully!"
+      Write-Host "📱 Your PWA is now available with enhanced features:"
+      Write-Host "   • Dark/Light mode toggle"
+      Write-Host "   • Search functionality"
+      Write-Host "   • Export/Import capabilities"
+      Write-Host "   • Enhanced mobile experience"
+      Write-Host "💡 Visit your app and install it on your device for the best experience!"
+
+# Environment configuration
+environments:
+  production:
+    services:
+      web:
+        config:
+          ENVIRONMENT: production
+          
+  development:
+    services:
+      web:
+        config:
+          ENVIRONMENT: development

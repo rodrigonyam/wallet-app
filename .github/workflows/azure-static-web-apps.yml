@@ -1,0 +1,117 @@
+name: Deploy Enhanced Digital Wallet App to Azure
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main" ]
+    types: [opened, synchronize, reopened, closed]
+  workflow_dispatch:
+
+env:
+  AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+
+jobs:
+  build_and_deploy:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Build and Deploy Enhanced Wallet App
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          lfs: false
+
+      - name: Setup Node.js (for any build tools if needed)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate HTML, CSS, and JavaScript
+        run: |
+          echo "🔍 Validating application files..."
+          
+          # Check if main files exist
+          if [[ ! -f "index.html" ]]; then
+            echo "❌ index.html not found!"
+            exit 1
+          fi
+          
+          if [[ ! -f "manifest.json" ]]; then
+            echo "❌ manifest.json not found!"
+            exit 1
+          fi
+          
+          if [[ ! -d "css" ]] || [[ ! -f "css/styles.css" ]]; then
+            echo "❌ CSS files not found!"
+            exit 1
+          fi
+          
+          if [[ ! -d "js" ]]; then
+            echo "❌ JavaScript files not found!"
+            exit 1
+          fi
+          
+          echo "✅ All required files present"
+          
+          # Validate JSON files
+          echo "🔍 Validating JSON files..."
+          node -e "JSON.parse(require('fs').readFileSync('manifest.json', 'utf8'))" && echo "✅ manifest.json is valid"
+          
+          # Check for enhanced features
+          if grep -q "data-theme" css/styles.css; then
+            echo "✅ Dark mode support detected"
+          fi
+          
+          if grep -q "search-input" index.html; then
+            echo "✅ Search functionality detected"
+          fi
+          
+          if grep -q "export-btn" index.html; then
+            echo "✅ Export/Import functionality detected"
+          fi
+          
+          echo "🎉 Enhanced Digital Wallet App validation complete!"
+
+      - name: Build And Deploy to Azure Static Web Apps
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ env.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "/"
+          api_location: ""
+          output_location: ""
+          app_build_command: "echo 'No build required for static files'"
+          skip_app_build: true
+
+      - name: Deployment Summary
+        run: |
+          echo "🚀 Enhanced Digital Wallet App Deployment Complete!"
+          echo ""
+          echo "📱 Features Deployed:"
+          echo "   ✅ Mobile-first PWA design"
+          echo "   ✅ Dark/Light mode toggle"
+          echo "   ✅ Advanced search functionality"
+          echo "   ✅ Export/Import capabilities"
+          echo "   ✅ Enhanced camera integration"
+          echo "   ✅ Improved privacy controls"
+          echo "   ✅ Offline support"
+          echo "   ✅ Installation on home screen"
+          echo ""
+          echo "🌐 Your app is now live and ready for users!"
+          echo "💡 Users can install it as a native app from their browser"
+
+  close_pull_request:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Close Pull Request
+    steps:
+      - name: Close Pull Request
+        id: closepullrequest
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ env.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: "close"

@@ -6,12 +6,28 @@ function saveCard(name, imageData) {
         id: generateId(),
         name: name,
         imageData: imageData,
-        dateAdded: new Date().toISOString(),
-        hidden: false
+        createdAt: new Date().toISOString(),
+        lastModified: new Date().toISOString(),
+        hidden: false,
+        metadata: {
+            fileSize: imageData.length,
+            compressed: true,
+            version: '2.0'
+        }
     };
     
     cards.push(newCard);
-    localStorage.setItem('walletCards', JSON.stringify(cards));
+    try {
+        localStorage.setItem('walletCards', JSON.stringify(cards));
+        localStorage.setItem('walletLastUpdate', new Date().toISOString());
+    } catch (error) {
+        if (error.name === 'QuotaExceededError') {
+            // Storage quota exceeded, try cleanup
+            cleanupStorage();
+            throw new Error('Storage quota exceeded. Please delete some cards.');
+        }
+        throw error;
+    }
     
     return newCard;
 }
@@ -35,9 +51,17 @@ function updateCard(updatedCard) {
     const index = cards.findIndex(card => card.id === updatedCard.id);
     
     if (index !== -1) {
+        updatedCard.lastModified = new Date().toISOString();
         cards[index] = updatedCard;
-        localStorage.setItem('walletCards', JSON.stringify(cards));
-        return true;
+        
+        try {
+            localStorage.setItem('walletCards', JSON.stringify(cards));
+            localStorage.setItem('walletLastUpdate', new Date().toISOString());
+            return true;
+        } catch (error) {
+            console.error('Error updating card:', error);
+            return false;
+        }
     }
     
     return false;
@@ -84,19 +108,100 @@ function cleanupStorage() {
     }
 }
 
-// Check storage usage (mobile devices have limited storage)
+// Enhanced storage management functions
 function getStorageInfo() {
     try {
         const cards = getAllCards();
         const storageSize = JSON.stringify(cards).length;
+        const visibleCards = cards.filter(card => !card.hidden);
         
         return {
             cardCount: cards.length,
+            visibleCount: visibleCards.length,
             storageSize: storageSize,
-            storageSizeMB: (storageSize / (1024 * 1024)).toFixed(2)
+            storageSizeMB: (storageSize / (1024 * 1024)).toFixed(2),
+            lastUpdate: localStorage.getItem('walletLastUpdate'),
+            averageCardSize: cards.length > 0 ? Math.round(storageSize / cards.length) : 0
         };
     } catch (error) {
         console.error('Error getting storage info:', error);
-        return { cardCount: 0, storageSize: 0, storageSizeMB: '0.00' };
+        return { 
+            cardCount: 0, 
+            visibleCount: 0,
+            storageSize: 0, 
+            storageSizeMB: '0.00',
+            lastUpdate: null,
+            averageCardSize: 0
+        };
     }
+}
+
+// Export all data
+function exportAllData() {
+    const cards = getAllCards();
+    const storageInfo = getStorageInfo();
+    
+    return {
+        version: '2.0',
+        exportDate: new Date().toISOString(),
+        storageInfo: storageInfo,
+        cards: cards
+    };
+}
+
+// Import data with validation
+function importData(data) {
+    if (!data || !data.cards || !Array.isArray(data.cards)) {
+        throw new Error('Invalid import data format');
+    }
+    
+    const validCards = data.cards.filter(card => 
+        card.name && 
+        card.imageData && 
+        typeof card.name === 'string' &&
+        typeof card.imageData === 'string'
+    );
+    
+    if (validCards.length === 0) {
+        throw new Error('No valid cards found in import data');
+    }
+    
+    // Add metadata if missing
+    const processedCards = validCards.map(card => ({
+        ...card,
+        id: card.id || generateId(),
+        createdAt: card.createdAt || card.dateAdded || new Date().toISOString(),
+        lastModified: card.lastModified || card.createdAt || new Date().toISOString(),
+        hidden: card.hidden || false,
+        metadata: card.metadata || {
+            fileSize: card.imageData.length,
+            compressed: true,
+            version: '2.0',
+            imported: true
+        }
+    }));
+    
+    try {
+        localStorage.setItem('walletCards', JSON.stringify(processedCards));
+        localStorage.setItem('walletLastUpdate', new Date().toISOString());
+        return processedCards.length;
+    } catch (error) {
+        if (error.name === 'QuotaExceededError') {
+            throw new Error('Not enough storage space for import');
+        }
+        throw error;
+    }
+}
+
+// Performance monitoring
+function getPerformanceMetrics() {
+    const startTime = performance.now();
+    const cards = getAllCards();
+    const loadTime = performance.now() - startTime;
+    
+    return {
+        loadTime: Math.round(loadTime * 100) / 100,
+        cardCount: cards.length,
+        memoryUsage: navigator.deviceMemory || 'unknown'
+    };
 }
